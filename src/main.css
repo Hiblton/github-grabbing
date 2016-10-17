@@ -1,0 +1,27 @@
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  font-size: 13px;
+  line-height: 20px;
+  margin: 50px;
+}
+
+.link-to-repo {
+  position: relative;
+  bottom: 4px;
+}
+
+.list {
+  margin-left: -16px;
+}
+
+.spinner {
+  position: absolute;
+  margin-left: 16px;
+}
+
+.error {
+  color: red;
+}
