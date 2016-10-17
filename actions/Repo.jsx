@@ -16,26 +16,28 @@ function receiveRepos(username, json) {
   }
 }
 
-function errorGetRepos() {
+function errorGetRepos(username) {
   return {
     type: types.FETCH_REPOS_FAILURE,
+    username,
     repos: []
   }
 }
 
-function userNotFound() {
+function userNotFound(username) {
   return {
     type: types.FETCH_USER_NOT_FOUND,
+    username,
     repos: []
   }
 }
 
-function handleErrors(response, dispatch) {
+function handleErrors(username, response, dispatch) {
   if (!response.ok) {
     if (response.status === 404) {
-      dispatch(userNotFound());
+      dispatch(userNotFound(username));
     } else {
-      dispatch(errorGetRepos());
+      dispatch(errorGetRepos(username));
     }
 
     return false;
@@ -46,11 +48,16 @@ function handleErrors(response, dispatch) {
 
 export function getRepos(username) {
 
-  return function (dispatch) {
+  return function (dispatch, getState) {
+
+    if (getState().repos.username === username) {
+      return false;
+    }
+
     dispatch(requestRepos(username));
 
     return fetch(`https://api.github.com/users/${username}/repos`)
-      .then(response => handleErrors(response, dispatch)
+      .then(response => handleErrors(username, response, dispatch)
       ).then(json => {
           if (json) {
             dispatch(receiveRepos(username, json));
